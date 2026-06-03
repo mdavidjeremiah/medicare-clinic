@@ -1,0 +1,82 @@
+{% extends 'clinic/base.html' %}
+{% block title %}Medical History – MediCare Clinic{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1><i class="bi bi-file-medical"></i> Medical History</h1>
+      <p>Your complete health records</p>
+    </div>
+  </div>
+
+  <!-- Patient Info Card -->
+  <div class="card" style="margin-bottom:1.5rem;border-left:4px solid var(--primary);">
+    <div class="card-body">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1.5rem;">
+        <div>
+          <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Full Name</p>
+          <p style="font-weight:700;color:var(--heading);margin-top:.3rem;">{{ user.get_full_name }}</p>
+        </div>
+        <div>
+          <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Blood Group</p>
+          <p style="font-weight:700;color:var(--heading);margin-top:.3rem;">
+            {% if patient.blood_group %}<span class="badge badge-cancelled" style="font-size:.9rem;">{{ patient.blood_group }}</span>{% else %}Not set{% endif %}
+          </p>
+        </div>
+        <div>
+          <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Date of Birth</p>
+          <p style="font-weight:700;color:var(--heading);margin-top:.3rem;">{{ patient.date_of_birth }}</p>
+        </div>
+        <div>
+          <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Total Records</p>
+          <p style="font-weight:700;color:var(--primary);margin-top:.3rem;font-size:1.2rem;">{{ records.count }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if records %}
+  <div style="display:flex;flex-direction:column;gap:1.25rem;">
+    {% for record in records %}
+    <div class="card" style="border-left:4px solid var(--success);">
+      <div class="card-header">
+        <div>
+          <h3 style="font-size:1rem;">{{ record.date }}</h3>
+          <p style="font-size:.8rem;color:var(--muted);margin-top:.15rem;font-weight:400;">
+            <i class="bi bi-person-badge"></i> Dr. {{ record.doctor.user.get_full_name }} &nbsp;·&nbsp; {{ record.doctor.get_specialization_display }}
+          </p>
+        </div>
+        <span class="badge badge-completed"><i class="bi bi-check-circle-fill" style="font-size:.7rem;"></i> Completed</span>
+      </div>
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+          <div>
+            <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.5rem;">Diagnosis</p>
+            <p style="color:var(--heading);">{{ record.diagnosis }}</p>
+          </div>
+          <div>
+            <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.5rem;">Prescription</p>
+            <p style="color:var(--heading);">{{ record.prescription|default:"None" }}</p>
+          </div>
+        </div>
+        {% if record.notes %}
+        <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);">
+          <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.5rem;">Notes</p>
+          <p style="color:var(--text);">{{ record.notes }}</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="card">
+    <div class="empty-state">
+      <i class="bi bi-file-medical"></i>
+      <p>No medical records on file yet.</p>
+      <a href="{% url 'book_appointment' %}" class="btn btn-primary btn-sm">Book an Appointment</a>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

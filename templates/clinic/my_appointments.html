@@ -1,0 +1,50 @@
+{% extends 'clinic/base.html' %}
+{% block title %}My Appointments – MediCare Clinic{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1><i class="bi bi-calendar-range"></i> My Appointments</h1>
+      <p>Track and manage your appointment history</p>
+    </div>
+    <a href="{% url 'book_appointment' %}" class="btn btn-primary"><i class="bi bi-calendar-plus"></i> New Appointment</a>
+  </div>
+  <div class="card">
+    <div class="table-wrap">
+      {% if appointments %}
+      <table>
+        <thead>
+          <tr><th>Doctor</th><th>Specialization</th><th>Date</th><th>Time</th><th>Reason</th><th>Status</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+        {% for appt in appointments %}
+        <tr>
+          <td class="td-name">Dr. {{ appt.doctor.user.get_full_name }}</td>
+          <td>{{ appt.doctor.get_specialization_display }}</td>
+          <td>{{ appt.appointment_date }}</td>
+          <td>{{ appt.appointment_time }}</td>
+          <td>{{ appt.reason|truncatewords:8 }}</td>
+          <td><span class="badge badge-{{ appt.status|lower }}">{{ appt.get_status_display }}</span></td>
+          <td>
+            {% if appt.status == 'PENDING' or appt.status == 'APPROVED' %}
+            <a href="{% url 'cancel_appointment' appt.pk %}" class="btn btn-danger btn-sm"
+               onclick="return confirm('Cancel this appointment?')">
+              <i class="bi bi-x-circle"></i> Cancel
+            </a>
+            {% else %}&mdash;{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div class="empty-state">
+        <i class="bi bi-calendar-x"></i>
+        <p>No appointments yet.</p>
+        <a href="{% url 'book_appointment' %}" class="btn btn-primary btn-sm">Book your first appointment</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

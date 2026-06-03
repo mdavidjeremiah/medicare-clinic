@@ -1,0 +1,29 @@
+{% extends 'clinic/base.html' %}
+{% block title %}Book Appointment – MediCare Clinic{% endblock %}
+{% block content %}
+<div class="container-sm">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1><i class="bi bi-calendar-plus"></i> Book Appointment</h1>
+      <p>Select your doctor and preferred time slot</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group"><label class="form-label"><i class="bi bi-person-badge"></i> Select Doctor</label>{{ form.doctor }}</div>
+        <div class="form-row form-row-2">
+          <div class="form-group"><label class="form-label"><i class="bi bi-calendar"></i> Date</label>{{ form.appointment_date }}</div>
+          <div class="form-group"><label class="form-label"><i class="bi bi-clock"></i> Time</label>{{ form.appointment_time }}</div>
+        </div>
+        <div class="form-group"><label class="form-label"><i class="bi bi-chat-text"></i> Reason for Visit</label>{{ form.reason }}</div>
+        {% if form.errors %}<div class="alert alert-error"><i class="bi bi-x-circle-fill"></i> {{ form.errors }}</div>{% endif %}
+        <button type="submit" class="btn btn-primary" style="width:100%;padding:.8rem;border-radius:var(--radius);font-size:1rem;">
+          <i class="bi bi-check-circle"></i> Confirm Booking
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

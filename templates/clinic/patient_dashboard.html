@@ -1,0 +1,89 @@
+{% extends 'clinic/base.html' %}
+{% block title %}My Dashboard – MediCare Clinic{% endblock %}
+{% block content %}
+<div class="container">
+
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1><i class="bi bi-grid-1x2"></i> Welcome, {{ user.get_full_name|default:user.username }}</h1>
+      <p>Here's an overview of your health activity</p>
+    </div>
+    <a href="{% url 'book_appointment' %}" class="btn btn-primary"><i class="bi bi-calendar-plus"></i> New Appointment</a>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon amber"><i class="bi bi-hourglass-split"></i></div>
+      <div class="stat-info"><div class="value">{{ pending }}</div><div class="label">Pending</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green"><i class="bi bi-calendar2-check"></i></div>
+      <div class="stat-info"><div class="value">{{ approved }}</div><div class="label">Approved</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon blue"><i class="bi bi-calendar-range"></i></div>
+      <div class="stat-info"><div class="value">{{ patient.appointments.count }}</div><div class="label">Total</div></div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;align-items:start;">
+
+    <!-- Recent Appointments -->
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="bi bi-calendar-week" style="color:var(--primary)"></i> Recent Appointments</h3>
+        <a href="{% url 'my_appointments' %}" class="btn btn-secondary btn-sm">View All</a>
+      </div>
+      <div class="table-wrap">
+        {% if appointments %}
+        <table>
+          <thead><tr><th>Doctor</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody>
+          {% for appt in appointments %}
+          <tr>
+            <td class="td-name">Dr. {{ appt.doctor.user.get_full_name }}</td>
+            <td>{{ appt.appointment_date }}</td>
+            <td><span class="badge badge-{{ appt.status|lower }}">{{ appt.get_status_display }}</span></td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+          <i class="bi bi-calendar-x"></i>
+          <p>No appointments yet.</p>
+          <a href="{% url 'book_appointment' %}" class="btn btn-primary btn-sm">Book your first</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div style="display:flex;flex-direction:column;gap:1.25rem;">
+      <!-- Profile Card -->
+      <div class="card">
+        <div class="card-header"><h3><i class="bi bi-person-circle" style="color:var(--primary)"></i> Your Profile</h3></div>
+        <div class="card-body">
+          <div class="info-row">
+            <div class="info-item"><span class="info-label">Phone</span><span class="info-value">{{ patient.phone }}</span></div>
+            <div class="info-item"><span class="info-label">Blood Group</span><span class="info-value">{{ patient.blood_group|default:"Not set" }}</span></div>
+            <div class="info-item"><span class="info-label">Date of Birth</span><span class="info-value">{{ patient.date_of_birth }}</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- Quick Actions -->
+      <div class="card">
+        <div class="card-header"><h3><i class="bi bi-lightning-charge" style="color:var(--primary)"></i> Quick Actions</h3></div>
+        <div class="card-body quick-actions">
+          <a href="{% url 'book_appointment' %}" class="btn btn-primary btn-block"><i class="bi bi-calendar-plus"></i> Book Appointment</a>
+          <a href="{% url 'my_appointments' %}" class="btn btn-secondary btn-block"><i class="bi bi-calendar-range"></i> My Appointments</a>
+          <a href="{% url 'medical_history' %}" class="btn btn-secondary btn-block"><i class="bi bi-file-medical"></i> Medical History</a>
+          <a href="{% url 'doctors' %}" class="btn btn-secondary btn-block"><i class="bi bi-people"></i> View Doctors</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

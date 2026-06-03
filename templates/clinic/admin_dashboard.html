@@ -1,0 +1,77 @@
+{% extends 'clinic/base.html' %}
+{% block title %}Admin Dashboard – MediCare Clinic{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1><i class="bi bi-speedometer2"></i> Admin Dashboard</h1>
+      <p>System overview and management centre</p>
+    </div>
+    <a href="/admin/" class="btn btn-secondary btn-sm"><i class="bi bi-gear"></i> Django Admin</a>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon blue"><i class="bi bi-people-fill"></i></div>
+      <div class="stat-info"><div class="value">{{ total_patients }}</div><div class="label">Patients</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green"><i class="bi bi-person-badge-fill"></i></div>
+      <div class="stat-info"><div class="value">{{ total_doctors }}</div><div class="label">Doctors</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon purple"><i class="bi bi-calendar-range"></i></div>
+      <div class="stat-info"><div class="value">{{ total_appointments }}</div><div class="label">Appointments</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon amber"><i class="bi bi-hourglass-split"></i></div>
+      <div class="stat-info"><div class="value">{{ pending_appointments }}</div><div class="label">Pending</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon red"><i class="bi bi-envelope-exclamation-fill"></i></div>
+      <div class="stat-info"><div class="value">{{ unread_messages }}</div><div class="label">Unread Messages</div></div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;align-items:start;">
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="bi bi-clock-history" style="color:var(--primary)"></i> Recent Appointments</h3>
+        <a href="{% url 'all_appointments' %}" class="btn btn-secondary btn-sm">View All</a>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Patient</th><th>Doctor</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody>
+          {% for appt in recent_appointments %}
+          <tr>
+            <td class="td-name">{{ appt.patient.user.get_full_name }}</td>
+            <td>Dr. {{ appt.doctor.user.get_full_name }}</td>
+            <td>{{ appt.appointment_date }}</td>
+            <td><span class="badge badge-{{ appt.status|lower }}">{{ appt.get_status_display }}</span></td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4" class="td-empty">No appointments yet.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1.25rem;">
+      <div class="card">
+        <div class="card-header"><h3><i class="bi bi-lightning-charge" style="color:var(--primary)"></i> Admin Actions</h3></div>
+        <div class="card-body quick-actions">
+          <a href="{% url 'manage_users' %}" class="btn btn-primary btn-block"><i class="bi bi-people"></i> Manage Users</a>
+          <a href="{% url 'all_appointments' %}" class="btn btn-secondary btn-block"><i class="bi bi-calendar-range"></i> All Appointments</a>
+          <a href="{% url 'admin_messages' %}" class="btn btn-warning btn-block">
+            <i class="bi bi-envelope"></i> Messages
+            {% if unread_messages %}<span style="background:#fff;color:var(--warning);border-radius:50px;padding:0 .5rem;font-size:.7rem;font-weight:800;margin-left:auto;">{{ unread_messages }}</span>{% endif %}
+          </a>
+          <a href="/admin/" class="btn btn-secondary btn-block"><i class="bi bi-gear"></i> Django Admin</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

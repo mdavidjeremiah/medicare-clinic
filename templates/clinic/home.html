@@ -1,0 +1,81 @@
+{% extends 'clinic/base.html' %}
+{% block title %}MediCare Clinic – Your Health, Our Priority{% endblock %}
+{% block content %}
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-pills">
+        <span class="hero-pill"><i class="bi bi-shield-check"></i> Trusted Care</span>
+        <span class="hero-pill"><i class="bi bi-clock"></i> Mon–Fri 8am–6pm</span>
+        <span class="hero-pill"><i class="bi bi-geo-alt"></i> Kampala, Uganda</span>
+      </div>
+      <h1>Your Health,<br>Our Priority</h1>
+      <p>Book appointments online, access your medical records, and connect with specialist doctors — all in one secure platform.</p>
+      <div class="hero-btns">
+        <a href="{% url 'register' %}" class="btn btn-hero-primary"><i class="bi bi-person-plus"></i> Get Started Free</a>
+        <a href="{% url 'doctors' %}" class="btn btn-hero-ghost"><i class="bi bi-people"></i> Meet Our Doctors</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#eff6ff;color:var(--primary)"><i class="bi bi-calendar2-check"></i></div>
+      <h3>Easy Booking</h3>
+      <p>Schedule appointments with your preferred specialist in just a few clicks.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#ecfdf5;color:var(--success)"><i class="bi bi-file-medical"></i></div>
+      <h3>Medical Records</h3>
+      <p>Access your complete health history securely, anytime you need it.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#f5f3ff;color:var(--purple)"><i class="bi bi-person-badge"></i></div>
+      <h3>Expert Doctors</h3>
+      <p>Qualified specialists across General Practice, Cardiology, Pediatrics, and more.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#fffbeb;color:var(--warning)"><i class="bi bi-bell-fill"></i></div>
+      <h3>Live Updates</h3>
+      <p>Track your appointment status in real-time from your personal dashboard.</p>
+    </div>
+  </div>
+
+  <!-- Doctors -->
+  {% if doctors %}
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+    <h2 style="font-size:1.4rem;font-weight:800;">Meet Our Doctors</h2>
+    <a href="{% url 'doctors' %}" class="btn btn-outline btn-sm"><i class="bi bi-arrow-right"></i> View All</a>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem;margin-bottom:3rem;">
+    {% for doctor in doctors %}
+    <div class="doctor-card">
+      <div class="doctor-card-top">
+        <div class="doctor-avatar"><i class="bi bi-person-fill"></i></div>
+        <div>
+          <h3>Dr. {{ doctor.user.get_full_name }}</h3>
+          <span class="badge badge-approved">{{ doctor.get_specialization_display }}</span>
+        </div>
+      </div>
+      <div class="doctor-card-body">
+        {% if doctor.bio %}<p style="font-size:.85rem;color:var(--text);margin-bottom:1rem;">{{ doctor.bio|truncatewords:15 }}</p>{% endif %}
+        {% if user.is_authenticated %}
+        <a href="{% url 'book_appointment' %}" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;">
+          <i class="bi bi-calendar-plus"></i> Book Appointment
+        </a>
+        {% else %}
+        <a href="{% url 'login' %}" class="btn btn-outline btn-sm" style="width:100%;justify-content:center;">
+          <i class="bi bi-person"></i> Login to Book
+        </a>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

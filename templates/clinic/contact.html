@@ -1,0 +1,74 @@
+{% extends 'clinic/base.html' %}
+{% block title %}Contact Us – MediCare Clinic{% endblock %}
+{% block content %}
+<div class="container-md">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1><i class="bi bi-envelope-fill"></i> Contact Us</h1>
+      <p>We'd love to hear from you. Send us a message and we'll respond promptly.</p>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;">
+    <div class="card">
+      <div class="card-header"><h3><i class="bi bi-send" style="color:var(--primary)"></i> Send a Message</h3></div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-row form-row-2">
+            <div class="form-group"><label class="form-label">Your Name</label>{{ form.name }}</div>
+            <div class="form-group"><label class="form-label">Email Address</label>{{ form.email }}</div>
+          </div>
+          <div class="form-group"><label class="form-label">Subject</label>{{ form.subject }}</div>
+          <div class="form-group"><label class="form-label">Message</label>{{ form.message }}</div>
+          <button type="submit" class="btn btn-primary" style="width:100%;padding:.8rem;border-radius:var(--radius);">
+            <i class="bi bi-send-fill"></i> Send Message
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1.25rem;">
+      <div class="card" style="border-left:4px solid var(--primary);">
+        <div class="card-body">
+          <h3 style="margin-bottom:1.25rem;font-size:1rem;"><i class="bi bi-geo-alt-fill" style="color:var(--primary)"></i> Find Us</h3>
+          <div class="info-row">
+            <div class="info-item">
+              <span class="info-label" style="min-width:80px;"><i class="bi bi-building" style="color:var(--primary)"></i> Address</span>
+              <span class="info-value">Plot 5, Mulago Hill Road, Kampala, Uganda</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label" style="min-width:80px;"><i class="bi bi-telephone" style="color:var(--success)"></i> Phone</span>
+              <span class="info-value">+256 414 123 456</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label" style="min-width:80px;"><i class="bi bi-envelope" style="color:var(--warning)"></i> Email</span>
+              <span class="info-value">info@medicareclinic.ug</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="border-left:4px solid var(--success);">
+        <div class="card-body">
+          <h3 style="margin-bottom:1.25rem;font-size:1rem;"><i class="bi bi-clock-fill" style="color:var(--success)"></i> Opening Hours</h3>
+          <div class="info-row">
+            <div class="info-item">
+              <span class="info-label" style="min-width:110px;">Mon – Fri</span>
+              <span class="info-value">8:00 am – 6:00 pm</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label" style="min-width:110px;">Saturday</span>
+              <span class="info-value">9:00 am – 2:00 pm</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label" style="min-width:110px;">Sunday</span>
+              <span class="info-value" style="color:var(--danger);">Closed</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

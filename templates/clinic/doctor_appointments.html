@@ -1,0 +1,57 @@
+{% extends 'clinic/base.html' %}
+{% block title %}Patient Appointments – MediCare Clinic{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1><i class="bi bi-calendar-range"></i> Patient Appointments</h1>
+      <p>Manage and update your patient appointments</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:1rem;">
+    <div class="card-body" style="padding:1rem 1.5rem;">
+      <form method="get" style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap;">
+        <label style="font-size:.85rem;font-weight:700;color:var(--heading);text-transform:uppercase;letter-spacing:.06em;"><i class="bi bi-funnel" style="color:var(--primary)"></i> Status</label>
+        <select name="status" onchange="this.form.submit()" style="padding:.5rem 1rem;border:1.5px solid var(--border);border-radius:var(--radius);font-size:.88rem;color:var(--heading);background:var(--surface);">
+          <option value="">All Statuses</option>
+          <option value="PENDING"   {% if status_filter == 'PENDING'   %}selected{% endif %}>Pending</option>
+          <option value="APPROVED"  {% if status_filter == 'APPROVED'  %}selected{% endif %}>Approved</option>
+          <option value="CANCELLED" {% if status_filter == 'CANCELLED' %}selected{% endif %}>Cancelled</option>
+          <option value="COMPLETED" {% if status_filter == 'COMPLETED' %}selected{% endif %}>Completed</option>
+        </select>
+        {% if status_filter %}<a href="{% url 'doctor_appointments' %}" class="btn btn-secondary btn-sm"><i class="bi bi-x"></i> Clear</a>{% endif %}
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="table-wrap">
+      {% if appointments %}
+      <table>
+        <thead><tr><th>Patient</th><th>Date</th><th>Time</th><th>Reason</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+        {% for appt in appointments %}
+        <tr>
+          <td class="td-name">{{ appt.patient.user.get_full_name }}</td>
+          <td>{{ appt.appointment_date }}</td>
+          <td>{{ appt.appointment_time }}</td>
+          <td>{{ appt.reason|truncatewords:10 }}</td>
+          <td><span class="badge badge-{{ appt.status|lower }}">{{ appt.get_status_display }}</span></td>
+          <td style="display:flex;gap:.4rem;flex-wrap:wrap;">
+            <a href="{% url 'update_appointment' appt.pk %}" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i> Update</a>
+            {% if appt.status == 'APPROVED' %}
+            <a href="{% url 'add_medical_record' appt.pk %}" class="btn btn-success btn-sm"><i class="bi bi-file-earmark-plus"></i> Record</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div class="empty-state"><i class="bi bi-calendar-x"></i><p>No appointments found.</p></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

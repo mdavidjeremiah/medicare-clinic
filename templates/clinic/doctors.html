@@ -1,0 +1,76 @@
+{% extends 'clinic/base.html' %}
+{% block title %}Our Doctors – MediCare Clinic{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1><i class="bi bi-people-fill"></i> Our Medical Team</h1>
+      <p>Qualified specialists ready to serve you</p>
+    </div>
+  </div>
+
+  <!-- Filter -->
+  <div class="card" style="margin-bottom:1.5rem;">
+    <div class="card-body" style="padding:1rem 1.5rem;">
+      <form method="get" style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap;">
+        <label style="font-size:.85rem;font-weight:700;color:var(--heading);text-transform:uppercase;letter-spacing:.06em;"><i class="bi bi-funnel" style="color:var(--primary)"></i> Specialization</label>
+        <select name="specialization" onchange="this.form.submit()" style="padding:.5rem 1rem;border:1.5px solid var(--border);border-radius:var(--radius);font-size:.88rem;min-width:200px;color:var(--heading);background:var(--surface);">
+          <option value="">All Specializations</option>
+          {% for code, name in specialization_choices %}
+          <option value="{{ code }}" {% if selected == code %}selected{% endif %}>{{ name }}</option>
+          {% endfor %}
+        </select>
+        {% if selected %}<a href="{% url 'doctors' %}" class="btn btn-secondary btn-sm"><i class="bi bi-x"></i> Clear</a>{% endif %}
+      </form>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;">
+    {% for doctor in doctors %}
+    <div class="doctor-card">
+      <div class="doctor-card-top">
+        <div class="doctor-avatar"><i class="bi bi-person-fill"></i></div>
+        <div>
+          <h3>Dr. {{ doctor.user.get_full_name }}</h3>
+          <span class="badge badge-approved">{{ doctor.get_specialization_display }}</span>
+          <p style="color:rgba(255,255,255,.6);font-size:.78rem;margin-top:.25rem;"><i class="bi bi-telephone"></i> {{ doctor.phone }}</p>
+        </div>
+      </div>
+      <div class="doctor-card-body">
+        {% if doctor.bio %}
+        <p style="font-size:.875rem;color:var(--text);margin-bottom:1rem;line-height:1.5;">{{ doctor.bio }}</p>
+        {% endif %}
+
+        {% if doctor.schedules.all %}
+        <div class="section-title" style="font-size:.8rem;margin-bottom:.75rem;"><i class="bi bi-calendar-week"></i> Schedule</div>
+        {% for schedule in doctor.schedules.all %}
+        {% if schedule.is_available %}
+        <div class="schedule-row">
+          <span class="schedule-day">{{ schedule.get_day_of_week_display }}</span>
+          <span class="schedule-time">{{ schedule.start_time|time:"H:i" }} – {{ schedule.end_time|time:"H:i" }}</span>
+        </div>
+        {% endif %}
+        {% empty %}
+        <p style="color:var(--muted);font-size:.82rem;">Schedule not set.</p>
+        {% endfor %}
+        {% endif %}
+
+        {% if user.is_authenticated %}
+        <a href="{% url 'book_appointment' %}" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;margin-top:1rem;">
+          <i class="bi bi-calendar-plus"></i> Book Appointment
+        </a>
+        {% else %}
+        <a href="{% url 'login' %}" class="btn btn-outline btn-sm" style="width:100%;justify-content:center;margin-top:1rem;">
+          <i class="bi bi-person"></i> Login to Book
+        </a>
+        {% endif %}
+      </div>
+    </div>
+    {% empty %}
+    <div class="empty-state" style="grid-column:1/-1;">
+      <i class="bi bi-people"></i><p>No doctors found for the selected filter.</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
