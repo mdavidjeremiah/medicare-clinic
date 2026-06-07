@@ -4,7 +4,7 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-hu1f&b@=t838(lv&am(^3^n3ts(k&-gdt98*=z681nssjaoea4'
 DEBUG = False
-ALLOWED_HOSTS = ['https://medicare-clinic-orpin.vercel.app/', 'https://medicare-clinic-t1wm.vercel.app/']
+ALLOWED_HOSTS = ['https://medicare-clinic-orpin.vercel.app/', 'https://medicare-clinic-t1wm.vercel.app/', 'medicare-clinic-orpin.vercel.app', 'medicare-clinic-t1wm.vercel.app', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
